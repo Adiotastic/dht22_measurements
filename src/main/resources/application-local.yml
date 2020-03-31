@@ -1,0 +1,22 @@
+spring:
+  profiles: local
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibersap.dialect.PostgreSQLDialect
+  datasource:
+    platform: postgres
+    driver-class-name: org.postgresql.Driver
+    data-password: test123
+    data-username: postgres
+    hikaki:
+      maximum-pool-size: 20
+      schema: measurements
+server:
+  port: 8080
+de:
+  heinze:
+    measurements:
+      dht22:
+        polling-interval: 60
