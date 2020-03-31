@@ -1,13 +1,11 @@
 package de.heinze.iot.dht22_measurements.service;
 
-import de.heinze.iot.dht22_measurements.data.dao.DHT22Dao;
 import de.heinze.iot.dht22_measurements.data.pojo.DHT22DataPojo;
 import de.heinze.iot.dht22_measurements.data.repository.DHT22Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: christianheinz
@@ -25,33 +23,22 @@ public class DHT22Service {
     }
 
     public DHT22DataPojo saveDHT22Data(DHT22DataPojo pojoData) {
-        DHT22Dao dao;
-
-        // TODO: Mapping
-        dao = dht22Repo.save(dao);
-
-        // TODO: Do something?
-
-        return pojoData;
+        return dht22Repo.save(pojoData);
     }
 
     public Iterable<DHT22DataPojo> saveDHT22Data(Iterable<DHT22DataPojo> dht22Data) {
-        List<DHT22Dao> daoList = new ArrayList<>();
+        return dht22Repo.saveAll(dht22Data);
+    }
 
-        // TODO: Mapping
-
-        Iterable<DHT22Dao> daoData = dht22Repo.saveAll(daoList);
-
-        // TODO: mapping
-
-        return dht22Data;
+    public Optional<DHT22DataPojo> getEntry(Long id) {
+        return dht22Repo.findById(id);
     }
 
     /**
      * Get all data for DHT22
      * @return all saved sensor data
      */
-    public Iterable<DHT22Dao> getAllData() {
+    public Iterable<DHT22DataPojo> getAllData() {
         return dht22Repo.findAll();
     }
 }

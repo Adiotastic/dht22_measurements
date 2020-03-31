@@ -4,15 +4,16 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: create-drop
-    database-platform: org.hibersap.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     platform: postgres
     driver-class-name: org.postgresql.Driver
-    data-password: test123
-    data-username: postgres
-    hikaki:
+    password: test123
+    username: postgres
+    hikari:
       maximum-pool-size: 20
       schema: measurements
+    url: jdbc:postgresql://localhost:30000/measurements
 server:
   port: 8080
 de:
