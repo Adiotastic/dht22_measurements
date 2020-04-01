@@ -4,12 +4,10 @@ import de.heinze.iot.dht22_measurements.data.pojo.DHT22DataPojo;
 import de.heinze.iot.dht22_measurements.service.DHT22Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Author: christianheinz
@@ -43,5 +41,15 @@ public class DHT22Controller {
         sample.setHumidity(27.0);
         sample.setTimestamp(new Date());
         return sample;
+    }
+
+    @GetMapping(path = "/dht22/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Iterable<DHT22DataPojo> getAllData() {
+        return dht22Service.getAllData();
+    }
+
+    @GetMapping(path = "/dht22/getEntry/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Optional<DHT22DataPojo> getEntry(@PathVariable Long id) {
+        return dht22Service.getEntry(id);
     }
 }

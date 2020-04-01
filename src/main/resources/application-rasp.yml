@@ -1,5 +1,5 @@
 spring:
-  profiles: local
+  profiles: rasp
   jpa:
     generate-ddl: true
     hibernate:
@@ -13,7 +13,7 @@ spring:
     hikaki:
       maximum-pool-size: 20
       schema: measurements
-    url: jdbc:postgresql://localhost:30000/measurements
+    url: jdbc:postgresql://192.168.178.38:5432/measurements
 server:
   port: 8080
 de:
