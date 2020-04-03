@@ -2,11 +2,12 @@ package de.heinze.iot.dht22_measurements.controller;
 
 import de.heinze.iot.dht22_measurements.data.pojo.DHT22DataPojo;
 import de.heinze.iot.dht22_measurements.service.DHT22Service;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -14,6 +15,7 @@ import java.util.Optional;
  * Date: 31.03.20
  */
 
+@Slf4j
 @RestController
 public class DHT22Controller {
 
@@ -26,6 +28,7 @@ public class DHT22Controller {
 
     @PutMapping(path = "/dht22/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public DHT22DataPojo saveData(@RequestBody DHT22DataPojo pojoData) {
+        pojoData.setTimestamp(LocalDateTime.now());
         return dht22Service.saveDHT22Data(pojoData);
     }
 
@@ -39,7 +42,7 @@ public class DHT22Controller {
         DHT22DataPojo sample = new DHT22DataPojo();
         sample.setDegreeCelsius(15.42);
         sample.setHumidity(27.0);
-        sample.setTimestamp(new Date());
+        sample.setTimestamp(LocalDateTime.now());
         return sample;
     }
 

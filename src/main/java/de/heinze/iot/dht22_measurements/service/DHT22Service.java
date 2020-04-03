@@ -17,6 +17,15 @@ public class DHT22Service {
 
     private DHT22Repository dht22Repo;
 
+    /**
+     * Tickrate in seconds. Default is 10
+     */
+    private int tickRate = 10;
+
+    public DHT22Service(int i) {
+        this.tickRate = tickRate;
+    }
+
     @Autowired
     public DHT22Service(DHT22Repository dht22Repo) {
         this.dht22Repo = dht22Repo;

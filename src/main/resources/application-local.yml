@@ -21,3 +21,5 @@ de:
     measurements:
       dht22:
         polling-interval: 60
+logging:
+  config: classpath:logback-local.xml
