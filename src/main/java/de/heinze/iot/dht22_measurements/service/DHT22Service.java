@@ -2,6 +2,7 @@ package de.heinze.iot.dht22_measurements.service;
 
 import de.heinze.iot.dht22_measurements.data.pojo.DHT22DataPojo;
 import de.heinze.iot.dht22_measurements.data.repository.DHT22Repository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
  * Date: 31.03.20
  */
 
+@Slf4j
 @Service
 public class DHT22Service {
 
@@ -32,6 +34,7 @@ public class DHT22Service {
     }
 
     public DHT22DataPojo saveDHT22Data(DHT22DataPojo pojoData) {
+        log.info("PojoData: " + pojoData.toString());
         return dht22Repo.save(pojoData);
     }
 

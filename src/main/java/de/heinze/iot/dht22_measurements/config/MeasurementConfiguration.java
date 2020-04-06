@@ -3,6 +3,7 @@ package de.heinze.iot.dht22_measurements.config;
 import de.heinze.iot.dht22_measurements.service.DHT22Service;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
 /**
@@ -19,9 +20,9 @@ public class MeasurementConfiguration {
         this.environment = environment;
     }
 
-    @Bean
-    public DHT22Service getDHT22Service() {
-        return new DHT22Service(10);
-    }
+//    @Bean
+//    public DHT22Service getDHT22Service() {
+//        return new DHT22Service(10);
+//    }
 
 }
