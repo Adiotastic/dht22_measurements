@@ -4,8 +4,11 @@ import de.heinze.iot.dht22_measurements.data.dao.LightingDao;
 import de.heinze.iot.dht22_measurements.data.mapper.LightingDataMapper;
 import de.heinze.iot.dht22_measurements.data.pojo.LightingDataPojo;
 import de.heinze.iot.dht22_measurements.data.repository.LightingRepository;
+import de.heinze.iot.dht22_measurements.data.repository.PlantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 /**
  * Author: christianheinz
@@ -17,9 +20,12 @@ public class LightingService {
 
     private LightingRepository lightingRepo;
 
+    private PlantRepository plantRepository;
+
     @Autowired
-    public LightingService(LightingRepository lightingRepo) {
+    public LightingService(LightingRepository lightingRepo, PlantRepository plantRepository) {
         this.lightingRepo = lightingRepo;
+        this.plantRepository = plantRepository;
     }
 
     /**
@@ -28,19 +34,25 @@ public class LightingService {
      * @param data
      * @return
      */
-    public LightingDataPojo storeLightingData(LightingDataPojo data) {
+    public LightingDataPojo storeLightingData(LightingDataPojo data, Long plantId) {
+
+        // Set now as timestamp
+        data.setTimestamp(LocalDateTime.now());
+
         LightingDao dao = LightingDataMapper.INSTANCE.pojoToDao(data);
-        lightingRepo.save(dao);
-        return data;
+
+        return plantRepository.findById(plantId).map(plant -> {
+            dao.setPlant(plant);
+            lightingRepo.save(dao);
+            return data;
+        }).orElseThrow(() -> new RuntimeException("Plant with Id " + plantId + " not found"));
     }
 
     /**
-     * Get single entry by id
-     *
-     * @param id
+     * @param plantId
      * @return
      */
-    public LightingDataPojo findById(Long id) {
-        return LightingDataMapper.INSTANCE.daoToPojo(lightingRepo.findById(id).get());
+    public Iterable<LightingDataPojo> findAllForPlant(Long plantId) {
+        return LightingDataMapper.INSTANCE.daoListToPojoList(lightingRepo.findByPlantId(plantId));
     }
 }

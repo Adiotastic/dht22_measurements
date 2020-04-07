@@ -1,10 +1,13 @@
 package de.heinze.iot.dht22_measurements.data.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.heinze.iot.dht22_measurements.data.converter.LocalDateTimeConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,5 +36,8 @@ public class LightingDao {
     private LocalDateTime timestamp;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plant_plantId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private PlantDataDao plant;
 }

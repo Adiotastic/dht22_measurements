@@ -18,7 +18,7 @@ import java.util.Set;
 public class PlantDataDao {
     @Id
     @GeneratedValue
-    private long plantId;
+    private long id;
 
     private long minimumTemperature;
 

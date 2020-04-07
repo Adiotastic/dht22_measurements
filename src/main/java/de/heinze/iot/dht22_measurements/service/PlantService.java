@@ -65,7 +65,7 @@ public class PlantService {
      */
     public PlantDataPojo updatePlant(Long id, PlantDataPojo pojoData) {
         PlantDataDao plantDao = PlantDataMapper.INSTANCE.pojoToDao(pojoData);
-        plantDao.setPlantId(id);
+        plantDao.setId(id);
         plantRepo.save(plantDao);
         return pojoData;
     }

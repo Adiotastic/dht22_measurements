@@ -1,9 +1,12 @@
 package de.heinze.iot.dht22_measurements.data.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.heinze.iot.dht22_measurements.data.converter.LocalDateTimeConverter;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -37,6 +40,9 @@ public class TemperatureDao {
     private double humidity;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plant_plantId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private PlantDataDao plant;
 
     /*

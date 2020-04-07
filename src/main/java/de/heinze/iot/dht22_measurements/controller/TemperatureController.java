@@ -1,6 +1,7 @@
 package de.heinze.iot.dht22_measurements.controller;
 
 import de.heinze.iot.dht22_measurements.data.pojo.TemperatureDataPojo;
+import de.heinze.iot.dht22_measurements.data.repository.PlantRepository;
 import de.heinze.iot.dht22_measurements.service.TemperatureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -28,12 +30,17 @@ public class TemperatureController {
         this.temperatureService = temperatureService;
     }
 
-    @PostMapping(path = "/dht22/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TemperatureDataPojo> saveData(@RequestBody TemperatureDataPojo pojoData) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(temperatureService.saveDHT22Data(pojoData));
+    @PostMapping(path = "/plants/{id}/temperature", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TemperatureDataPojo> saveData(@RequestBody TemperatureDataPojo pojoData, @PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(temperatureService.createEntry(pojoData, id));
     }
 
-    @GetMapping(path = "/dht22/sample", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/plants/{id}/temperature")
+    public ResponseEntity<Iterable<TemperatureDataPojo>> findAllForPlant(@PathVariable Long id) {
+        return ResponseEntity.ok(temperatureService.findAllForPlant(id));
+    }
+
+    @GetMapping(path = "/temperature/sample", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TemperatureDataPojo> getSampleData() {
         TemperatureDataPojo sample = new TemperatureDataPojo();
         sample.setDegreeCelsius(15.4);
@@ -42,8 +49,4 @@ public class TemperatureController {
         return ResponseEntity.ok(sample);
     }
 
-    @GetMapping(path = "/dht22/getEntry/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TemperatureDataPojo> getEntry(@PathVariable Long id) {
-        return ResponseEntity.ok(temperatureService.findById(id));
-    }
 }

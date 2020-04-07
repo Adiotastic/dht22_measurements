@@ -3,9 +3,12 @@ package de.heinze.iot.dht22_measurements.service;
 import de.heinze.iot.dht22_measurements.data.dao.SoilHumidityDao;
 import de.heinze.iot.dht22_measurements.data.mapper.SoilHumidityDataMapper;
 import de.heinze.iot.dht22_measurements.data.pojo.SoilHumidityDataPojo;
+import de.heinze.iot.dht22_measurements.data.repository.PlantRepository;
 import de.heinze.iot.dht22_measurements.data.repository.SoilHumidityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 /**
  * Author: christianheinz
@@ -17,9 +20,12 @@ public class SoilHumidityService {
 
     private SoilHumidityRepository soilRepo;
 
+    private PlantRepository plantRepo;
+
     @Autowired
-    public SoilHumidityService(SoilHumidityRepository soilRepo) {
+    public SoilHumidityService(SoilHumidityRepository soilRepo, PlantRepository plantRepo) {
         this.soilRepo = soilRepo;
+        this.plantRepo = plantRepo;
     }
 
     /**
@@ -27,10 +33,18 @@ public class SoilHumidityService {
      * @param soilData
      * @return
      */
-    public SoilHumidityDataPojo storeHumidity(SoilHumidityDataPojo soilData) {
+    public SoilHumidityDataPojo createEntry(SoilHumidityDataPojo soilData, Long plantId) {
+
+        // Set Now as Timestamp
+        soilData.setTimestamp(LocalDateTime.now());
+
         SoilHumidityDao dao = SoilHumidityDataMapper.INSTANCE.pojoToDao(soilData);
-        soilRepo.save(dao);
-        return soilData;
+
+        return plantRepo.findById(plantId).map( plant -> {
+            dao.setPlant(plant);
+            soilRepo.save(dao);
+            return soilData;
+        }).orElseThrow(() -> new RuntimeException("Plant not found for id " + plantId));
     }
 
     /**
@@ -38,8 +52,8 @@ public class SoilHumidityService {
      * @param id
      * @return
      */
-    public SoilHumidityDataPojo findById(Long id) {
-        return SoilHumidityDataMapper.INSTANCE.daoToPojo(soilRepo.findById(id).get());
+    public Iterable<SoilHumidityDataPojo> findAllForPlant(Long id) {
+        return SoilHumidityDataMapper.INSTANCE.daoListToPojoList(soilRepo.findByPlantId(id));
     }
 
 

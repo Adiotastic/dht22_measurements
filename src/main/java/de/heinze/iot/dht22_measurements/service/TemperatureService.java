@@ -1,14 +1,17 @@
 package de.heinze.iot.dht22_measurements.service;
 
+import de.heinze.iot.dht22_measurements.data.dao.LightingDao;
 import de.heinze.iot.dht22_measurements.data.dao.TemperatureDao;
+import de.heinze.iot.dht22_measurements.data.mapper.LightingDataMapper;
 import de.heinze.iot.dht22_measurements.data.mapper.TemperatureDataMapper;
 import de.heinze.iot.dht22_measurements.data.pojo.TemperatureDataPojo;
+import de.heinze.iot.dht22_measurements.data.repository.PlantRepository;
 import de.heinze.iot.dht22_measurements.data.repository.TemperatureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 /**
  * Author: christianheinz
@@ -19,30 +22,39 @@ import java.util.Optional;
 @Service
 public class TemperatureService {
 
-    private TemperatureRepository dht22Repo;
+    private TemperatureRepository tempRepo;
 
-    /**
-     * Tickrate in seconds. Default is 10
-     */
-    private int tickRate = 10;
-
-    public TemperatureService(int i) {
-        this.tickRate = tickRate;
-    }
+    private PlantRepository plantRepo;
 
     @Autowired
-    public TemperatureService(TemperatureRepository dht22Repo) {
-        this.dht22Repo = dht22Repo;
+    public TemperatureService(TemperatureRepository tempRepo, PlantRepository plantRepo) {
+        this.tempRepo = tempRepo;
+        this.plantRepo = plantRepo;
     }
 
-    public TemperatureDataPojo saveDHT22Data(TemperatureDataPojo pojoData) {
-        log.info("PojoData: " + pojoData.toString());
+    /**
+     * @param pojoData
+     * @return
+     */
+    public TemperatureDataPojo createEntry(TemperatureDataPojo pojoData, Long plantId) {
+
+        // Set current timestamp
+        pojoData.setTimestamp(LocalDateTime.now());
+
         TemperatureDao dao = TemperatureDataMapper.INSTANCE.pojoToDao(pojoData);
-        dht22Repo.save(dao);
-        return pojoData;
+
+        return plantRepo.findById(plantId).map(plant -> {
+            dao.setPlant(plant);
+            tempRepo.save(dao);
+            return pojoData;
+        }).orElseThrow(() -> new RuntimeException("Plant with Id " + plantId + " not found"));
     }
 
-    public TemperatureDataPojo findById(Long id) {
-        return TemperatureDataMapper.INSTANCE.daoToPojo(dht22Repo.findById(id).get());
+    /**
+     * @param id
+     * @return
+     */
+    public Iterable<TemperatureDataPojo> findAllForPlant(Long id) {
+        return TemperatureDataMapper.INSTANCE.daoListToPojoList(tempRepo.findByPlantId(id));
     }
 }

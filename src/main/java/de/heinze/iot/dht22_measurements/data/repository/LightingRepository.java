@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LightingRepository extends CrudRepository<LightingDao, Long> {
+
+    Iterable<LightingDao> findByPlantId(Long plantId);
 }
