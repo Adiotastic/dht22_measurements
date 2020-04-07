@@ -17,6 +17,19 @@ public class MeasurementProperties {
      */
     private DHT22 dht22 = new DHT22();
 
+    /**
+     * Limit of humidity to be warned at
+     */
+    private double humidityLimit;
+
+    /**
+     * Limit of temperature to be warned at
+     */
+    private double temperatureLimit;
+
+    /**
+     * DHT22 sensor specific configuration
+     */
     class DHT22 {
         /**
          * Configuration for the polling interval in seconds

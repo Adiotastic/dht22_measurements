@@ -10,11 +10,11 @@
     </appender>
 
 
-    <root level="info">
+    <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>
 
-    <logger name="de.heinze.iot.dht22_measurements.data.pojo.DHT22DataPojo" level="debug" additivity="false">
+    <logger name="de.heinze.iot.dht22_measurements.data.pojo.TemperatureDataPojo" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 

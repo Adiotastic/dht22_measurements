@@ -21,5 +21,7 @@ de:
     measurements:
       dht22:
         polling-interval: 60
+      humidity-limit: 40.0
+      temperature-limit: 23.0
 logging:
   config: classpath:logback-local.xml

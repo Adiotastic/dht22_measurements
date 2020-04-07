@@ -1,4 +1,4 @@
-package de.heinze.iot.dht22_measurements.data.pojo;
+package de.heinze.iot.dht22_measurements.data.dao;
 
 import de.heinze.iot.dht22_measurements.data.converter.LocalDateTimeConverter;
 import lombok.Data;
@@ -18,12 +18,14 @@ import java.time.LocalDateTime;
 @Slf4j
 @Entity
 @Data
-public class DHT22DataPojo {
+public class TemperatureDao {
 
     @Id
     @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    private String sensorId;
 
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime timestamp;
@@ -31,22 +33,22 @@ public class DHT22DataPojo {
     @Column(precision = 2)
     private double degreeCelsius;
 
-    @Column(length = 100, nullable = true)
-    private String location;
-
     @Column(precision = 2)
     private double humidity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PlantDataDao plant;
 
     /*
      * --- Testing Purpose ---
      */
     @PostConstruct
     public void initIt() throws Exception {
-        log.debug("Init method called");
+        //log.debug("Init method called");
     }
 
     @PreDestroy
     public void cleanUp() throws Exception {
-        log.debug("Clean Up");
+        //log.debug("Clean Up");
     }
 }

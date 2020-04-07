@@ -1,6 +1,6 @@
 package de.heinze.iot.dht22_measurements.data.repository;
 
-import de.heinze.iot.dht22_measurements.data.pojo.DHT22DataPojo;
+import de.heinze.iot.dht22_measurements.data.dao.TemperatureDao;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface DHT22Repository extends CrudRepository<DHT22DataPojo, Long> {
+public interface TemperatureRepository extends CrudRepository<TemperatureDao, Long> {
 
 }

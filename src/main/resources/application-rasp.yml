@@ -3,7 +3,7 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     platform: postgres
@@ -13,7 +13,7 @@ spring:
     hikaki:
       maximum-pool-size: 20
       schema: measurements
-    url: jdbc:postgresql://localhost:5432/measurements
+    url: jdbc:postgresql://192.168.178.38:5432/measurements
 server:
   port: 8080
 de:
